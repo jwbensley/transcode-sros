@@ -55,7 +55,6 @@ for read in file_cfg :
                         if index>0 and 'create' in tab_LINE[index-1]:
                             print(' '.join(tab_LINE))
                             tab_LINE[index-1] = tab_LINE[index-1].replace(' create','')
-                            
                         tab_LINE.append(line.strip())
                         index+=1
                         exit_found = False
