@@ -27,6 +27,10 @@ exit_found = False
 for read in file_cfg :
 	# Read an config line
 	line = read
+	# Print lines already in the long format (beinging with "/") verbatim
+	if (re.search("^ *\/", line)):
+		print(line.strip())
+		continue
 	# Extract Comment lines
 	isComment = re.search("^ *#", line)
 	isEcho = re.search("^ *echo", line)
