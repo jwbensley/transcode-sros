@@ -32,7 +32,7 @@ for read in file_cfg :
     if (re.search("^ *\/", line)):
         print(line.strip())
         continue
-    
+
     # Skip lines which are comments, echo statements of section headers (only "-" character)
     isComment = re.search("^ *#", line)
     isEcho = re.search("^ *echo", line)
@@ -64,10 +64,10 @@ for read in file_cfg :
             #If current line is less specific that previous one remove word to the list
             if (indentation < last_indentation ):
                 del tab_LINE[index-1]
-                tab_LINE.append(line.strip())       
+                tab_LINE.append(line.strip())
             #If current line is same specific that previous and depending on last exit found write config line in file
             if ((last_indentation == indentation ) and indentation!=0 ):
-                if exit_found:                          
+                if exit_found:
                     del tab_LINE[index-1]
                     tab_LINE.append(line.strip())
                     print(' '.join(tab_LINE))
@@ -76,8 +76,7 @@ for read in file_cfg :
                     del tab_LINE[index-1]
                     tab_LINE.append(line.strip())
             last_indentation = indentation
-            
-                
+
         #Manage line with an exit statement
         else:
             if exit_found != True:
@@ -88,12 +87,12 @@ for read in file_cfg :
                     del tab_LINE[index-1]
                     index-=1
                     last_indentation = indentation - 1
-                    exit_found = True                   
+                    exit_found = True
                 else:
                     exit_found = False
             else:
                 del tab_LINE[index-1]
                 index-=1    
                 last_indentation = indentation - 1
-                
+
 sys.stdout.close ()
