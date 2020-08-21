@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
 # Allow to transcode a SROS config file collected by admin display-config in a flat config file
 # The only limitation is do not have 4 space characters in your description as indentation is 
@@ -11,8 +11,9 @@
 #   or to save in file
 # python transcode-sros.sh <your-config-file> > flat-config.txt
 
-import sys
 import fileinput
+import re
+import sys
 
 # INIT file path
 file_cfg = fileinput.input()
@@ -27,11 +28,11 @@ for read in file_cfg :
 	# Read an config line
 	line = read
 	# Extract Comment lines
-	isComment = line[0]
-	isEcho = line[0:4]
-	# Exclude comment, echo and empty line 
-	if isComment != '#':
-		if isEcho != 'echo':
+	isComment = re.search("^ *#", line)
+	isEcho = re.search("^ *echo", line)
+	# Exclude comment, echo and empty line
+	if not isComment:
+		if not isEcho:
 			if line.strip()!='' and line.strip() != 'exit all':
 				#SROS indentation is made of 4 space characters
 				indentation = line.count('    ')			
@@ -45,10 +46,10 @@ for read in file_cfg :
 						#manage line with create word differently
 						if 'create' in line.strip():
 							create_line = ' '.join(tab_LINE) + ' ' + line.strip()
-							print create_line
+							print(create_line)
 							line = line.replace(' create','').strip()
 						if index>0 and 'create' in tab_LINE[index-1]:
-							print ' '.join(tab_LINE)
+							print(' '.join(tab_LINE))
 							tab_LINE[index-1] = tab_LINE[index-1].replace(' create','')
 							
 						tab_LINE.append(line.strip())
@@ -63,9 +64,9 @@ for read in file_cfg :
 						if exit_found:							
 							del tab_LINE[index-1]
 							tab_LINE.append(line.strip())
-							print ' '.join(tab_LINE)
+							print(' '.join(tab_LINE))
 						else:
-							print ' '.join(tab_LINE)
+							print(' '.join(tab_LINE))
 							del tab_LINE[index-1]
 							tab_LINE.append(line.strip())
 					last_indentation = indentation
@@ -75,7 +76,7 @@ for read in file_cfg :
 				else:
 					if exit_found != True:
 						if last_indentation != indentation:
-							print ' '.join(tab_LINE)
+							print(' '.join(tab_LINE))
 							del tab_LINE[index-1]
 							index-=1
 							del tab_LINE[index-1]
